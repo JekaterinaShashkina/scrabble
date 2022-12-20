@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import random_let
+import word
 
 
 def finish():
@@ -31,7 +32,8 @@ frame['padding'] = (100, 10)
 user_word_label = ttk.Label(frame, justify=LEFT, text="Your word ")
 user_word_label.grid(column=0, row=0, sticky=W)  # выводим слово которое пользователь придумал
 # user_word_label.pack()
-
+user_words_list = ttk.Label(frame, text="List of your words: ")
+user_words_list.grid(column=2, row=0)
 entered_text = ttk.Entry(frame)
 entered_text.grid(column=1, row=0, sticky=W, padx=25, pady=5)
 # entered_text.pack(anchor=S, padx=6, pady=6)
@@ -63,27 +65,36 @@ direct_btn.grid(**position, column=1, row=4, padx=25, pady=5)
 
 
 user_all_words = []
+user_word = ""
+user_row = 0
+user_column = 0
+user_direct = ""
+
 def save_data(): # выводим текст на экран если соответствует условиям (не работает)
     user_word = entered_text.get() # получаем введенный текст
     user_column = column_entry.get()
     user_row = row_entry.get()
     user_direct = selected_direct.get()
-    user_choice = []
-    user_choice.append(user_word)
-    user_choice.append(user_column)
-    user_choice.append(user_row)
-    user_choice.append(user_direct)
-    user_all_words.append(user_choice)
+    user_location = random_let.row_column_check(user_column, user_row)
     # print(user_all_words[0][0])
-    print(user_all_words)
-    return user_all_words
+    #print(user_all_words)
+    if random_let.letters_control(user_word) and word.word_in_dict_control(user_word):
+        print("Pass")
+        global user_all_words
+        user_all_words.append(user_word)
+    else:
+        print("Dont pass. Please enter your word")
 
+    print(user_word, user_location, user_direct)
+    print(user_all_words)
 
 
 btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
 btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
 
 frame.pack(anchor=N, padx=5, pady=5) # выводим рамку на экран
+# print(user_word, user_column, user_row, user_direct)
+print(user_all_words)
 
 # Создаем поле для игры 
 game_field = Canvas(bg="#ccc", width=600, height=600, borderwidth=0)

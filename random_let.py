@@ -1,6 +1,6 @@
 import random
 import string
-
+import word
 bag = [] # создаем массив сумка букв
 def add_to_bag(tile, quantity): # добавляем буквы и количество букв в сумку 
     for _ in range(quantity):
@@ -43,6 +43,7 @@ def remove_from_bag(tile):
 # alpha = string.ascii_lowercase
 user_letters = []
 vowels = "euioa"
+
 def letters_add():
     while len(user_letters) < 7:
         l = random.choice(bag)
@@ -62,8 +63,6 @@ def letters_add():
     
     return let
 print(*user_letters)
-
-
 if len(user_letters) < 7:
     letters_add()
 # word = input(f"Введите слово из букв {let} ")
@@ -75,8 +74,10 @@ def letters_control(word):
             count += 1
     if count == len(word):
         print('Отлично')
+        return True
     else:
         print('не так')
+        return False
 
 # en_dict = '/dictionaries/english_noun.txt'
 # ee_dict = '/dictionaries/estonian_nouns.txt'
@@ -95,25 +96,32 @@ def pointsCount(word):
     points = sum(map(fun, word))
     return points
 
-# Проверка в словаре 
-def word_in_dict_control(word):
-    with open('./dictionaries/english_noun.txt', 'r') as en_dict: # открываем файл на чтение
-        words = en_dict.readlines()    # читаем файл построчно и делаем массив строк
-    # w = 0
-    for line in words:
-        if line.strip('\n') == word: # проверяем есть ли слово в словаре, удаляем из слов в словаре перенос строки
-            print(f'Grats')
-            return True
-        else:
-            print(f"Sorry")
-            return False
+# # Проверка в словаре 
+# def word_in_dict_control(word):
+#     with open('./dictionaries/english_noun.txt', 'r') as en_dict: # открываем файл на чтение
+#         words = en_dict.readlines()    # читаем файл построчно и делаем массив строк
+#     # w = 0
+#     for line in words:
+#         if line.strip('\n') == word: # проверяем есть ли слово в словаре, удаляем из слов в словаре перенос строки
+#             print(f'Grats')
+#             return True
+#         else:
+#             print(f"Sorry")
+#             return False
             
 # начисление пунктов за слово
 def word_points(word):
-    if word_in_dict_control(word) == True:
+    if word.word_in_dict_control(word) == True:
         points = pointsCount(word)
         print(f'Grats your word is {points} points')
     else:
         print(f"Sorry, you word is not found")
 
 
+def row_column_check(column, row):
+    location = []
+    if (column == "" or row == "") or (column not in [str(x) for x in range(15)]) or (row not in [str(x) for x in range(15)]):
+        location = [-1,-1]
+    else:
+        location = [int(row), int(column)]
+    return location
