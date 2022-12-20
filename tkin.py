@@ -10,7 +10,7 @@ def finish():
 rootWindow = Tk() # создаем новый обьект - окно
 rootWindow.title("SCRABBLE for everyone!!!") # устанавливаем заголовок окна
 rootWindow.iconbitmap(default="img/scrabble.ico")
-rootWindow.geometry("700x700+600+200") # устанавливаем размеры окна
+rootWindow.geometry("700x800+400+0") # устанавливаем размеры окна
 # rootWindow.attributes("-alpha", 0.2) # установка прозрачности
 # rootWindow.attributes("-toolwindow", True) # отключение верхней панели окна
 
@@ -19,64 +19,78 @@ gameName = Label(text="SCRABBLE") # создаем текстовую метку
 gameName.pack() # размещаем метку в окне
 rootWindow.protocol("WM_DELETE_WINDOW", finish) # хрень какая то перехватываем закрытие окна 
 
-btn_new_game = ttk.Button() # Создаем кнопку новой игры
-btn_new_game.pack( side=BOTTOM, pady=20, ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
-btn_new_game["text"] ="New Game" # устанавливаем параметр text на кнопку новая игра
-
 #получаем набор 7 букв добавляем его на поле
 user_letters = random_let.letters_add()
 us_let = ttk.Label(text=user_letters)
 us_let.pack()
-entered_text = ttk.Entry()
-entered_text.pack(anchor=S, padx=6, pady=6)
 
-user_word = entered_text.get() # получаем введенный текст
 
-def show_message(): # выводим текст на экран если соответствует условиям (не работает)
-    print(user_word)
-    u_w = Label(rootWindow, text=user_word)
-    if random_let.letters_control(user_word) and random_let.word_in_dict_control(user_word) == True:
-        u_w.pack()
+frame = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700) # Создаем новое окно в корневом окне
+frame['padding'] = (100, 10)
 
-frame = ttk.Frame(borderwidth=1, relief=SOLID, padding=[8,10]) # Создаем новое окно в корневом окне
-user_word_label = ttk.Label(frame, text=f"Your word {user_word}")  # выводим слово которое пользователь придумал
-user_word_label.pack(anchor=NW)
+user_word_label = ttk.Label(frame, justify=LEFT, text="Your word ")
+user_word_label.grid(column=0, row=0, sticky=W)  # выводим слово которое пользователь придумал
+# user_word_label.pack()
+
+entered_text = ttk.Entry(frame)
+entered_text.grid(column=1, row=0, sticky=W, padx=25, pady=5)
+# entered_text.pack(anchor=S, padx=6, pady=6)
 
 row_label = ttk.Label(frame, text="Enter row number") # выбираем ряд в который устанавливаем слово
-row_label.pack()
+row_label.grid(column=0, row=1, sticky=W)
 row_entry = ttk.Entry(frame, width=3)
-row_entry.pack(anchor=NW)
+row_entry.grid(column=1, row=1, sticky=W, padx=25, pady=5)
  
 column_label = ttk.Label(frame, text="Enter column number") # выбираем колонку с которой слово начинается
-column_label.pack()
+column_label.grid(column=0, row=2, sticky=W)
 column_entry = ttk.Entry(frame, width=3)
-column_entry.pack(anchor=NW)
+column_entry.grid(column=1, row=2, sticky=W, padx=25, pady=5)
 
-position = {"padx":6, "pady":6, "anchor":NW} # выбираем направление в котором устанавливаем слово
+position = {"sticky":W} # выбираем направление в котором устанавливаем слово
 direct = ["Right", "Down"]
 selected_direct = StringVar()
 header = ttk.Label(frame, text="Choose direction")
-header.pack(**position)
+header.grid(column=0, row=3, sticky=W)
 
 def select():
     header.config(text=f"Your choice {selected_direct.get()}")
 
-for d in direct:
-    direct_btn = ttk.Radiobutton(frame, text=d, value=d, variable=selected_direct, command=select)
-    direct_btn.pack(**position)
 
-btn_send = ttk.Button(frame, text="Send") # кнопка для отсылки инфо о выборе
-btn_send.pack(anchor=S, padx=6, pady=6)
-
-frame.pack(anchor=NW, padx=5, pady=5) # выводим рамку на экран
+direct_btn = ttk.Radiobutton(frame, text=direct[0], value=direct[0], variable=selected_direct, command=select)
+direct_btn.grid(**position, column=1, row=3, padx=25)
+direct_btn = ttk.Radiobutton(frame, text=direct[1], value=direct[1], variable=selected_direct, command=select)
+direct_btn.grid(**position, column=1, row=4, padx=25, pady=5)
 
 
-btn_save = ttk.Button(text="Save", command=show_message) # кнопка сохранить слово
-btn_save.pack(anchor=S, padx=6, pady=6) 
+user_all_words = []
+def save_data(): # выводим текст на экран если соответствует условиям (не работает)
+    user_word = entered_text.get() # получаем введенный текст
+    user_column = column_entry.get()
+    user_row = row_entry.get()
+    user_direct = selected_direct.get()
+    user_choice = []
+    user_choice.append(user_word)
+    user_choice.append(user_column)
+    user_choice.append(user_row)
+    user_choice.append(user_direct)
+    user_all_words.append(user_choice)
+    # print(user_all_words[0][0])
+    print(user_all_words)
+    return user_all_words
+
+
+
+btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
+btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
+
+frame.pack(anchor=N, padx=5, pady=5) # выводим рамку на экран
 
 # Создаем поле для игры 
 game_field = Canvas(bg="#ccc", width=600, height=600, borderwidth=0)
 game_field.pack(anchor=CENTER, expand=1)
+
+# column_label = ttk.Label(game_field, text="1    2   3   4   5   6   7   8   9   ")
+# column_label.grid(column=0, row=0)
 
 ROW = 15
 COLUMNS = 15
@@ -109,4 +123,20 @@ for i in range(ROW):
 
 
 
+footer = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700)
+footer['padding'] = (50, 1)
+
+timer = ttk.Label(footer, text='Time: ')
+timer['padding'] = (10, 0, 130, 0)
+timer.grid(column=0, row=0, sticky=E) 
+score = ttk.Label(footer, text="Your score: ")
+score['padding'] = (10, 0, 130, 0)
+score.grid(column=1, row=0)
+
+btn_new_game = ttk.Button(footer) # Создаем кнопку новой игры
+btn_new_game.grid(column=2, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
+btn_new_game["text"] ="New Game" # устанавливаем параметр text на кнопку новая игра
+btn_new_game['padding'] = (10, 0, 10, 0)
+
+footer.pack(anchor=S, padx=5, pady=5) # выводим рамку на экран
 rootWindow.mainloop()
