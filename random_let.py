@@ -79,10 +79,10 @@ def user_letters_update(word, letters):
     let = ' '.join(l_letters)
     return let
 
-def letters_control(word):
+def letters_control(word, letters):
     count = 0
     for i in word:
-        if i in user_letters:
+        if i in letters:
             count += 1
     if count == len(word):
         print('Отлично')

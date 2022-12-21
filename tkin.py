@@ -117,7 +117,7 @@ def save_data(): # выводим текст на экран если соотв
     user_location = random_let.row_column_check(user_column, user_row)
     # print(user_all_words[0][0])
     #print(user_all_words)
-    if random_let.letters_control(user_word): #and word.word_in_dict_control(user_word):
+    if random_let.letters_control(user_word, user_letters): #and word.word_in_dict_control(user_word):
         user_column_int = int(user_column)
         user_row_int = int(user_row)
         random_let.word_place(user_word, user_direct, user_column_int, user_row_int, buttons)
@@ -125,12 +125,14 @@ def save_data(): # выводим текст на экран если соотв
         global user_all_words
         user_all_words.append(user_word)
         score = random_let.pointsCount(user_word)
+
         new_letters = random_let.user_letters_update( user_word, user_letters)
         # random_let.user_letters_update(user_word, user_letters)
         global all_score 
         all_score += score
         print(f"your score {score}")
-        us_let['text'] = new_letters
+        # user_letters = new_letters
+        us_let['text'] = user_letters
         print(new_letters)
         print(user_all_words)
         print(all_score)
@@ -150,7 +152,7 @@ footer['padding'] = (50, 1)
 timer = ttk.Label(footer, text='Time: ')
 timer['padding'] = (10, 0, 130, 0)
 timer.grid(column=0, row=0, sticky=E) 
-score = ttk.Label(footer, text="Your score: ")
+score = ttk.Label(footer, text=f"Your score: {all_score}")
 score['padding'] = (10, 0, 130, 0)
 score.grid(column=1, row=0)
 
