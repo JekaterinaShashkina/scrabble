@@ -111,23 +111,31 @@ for i in range(ROW):
 def save_data(): # выводим текст на экран если соответствует условиям (не работает)
     user_word = entered_text.get() # получаем введенный текст
     user_column = column_entry.get()
-    user_column = int(user_column)
     user_row = row_entry.get()
-    user_row = int(user_row)
     user_direct = selected_direct.get()
     user_location = random_let.row_column_check(user_column, user_row)
     # print(user_all_words[0][0])
     #print(user_all_words)
-    if random_let.letters_control(user_word) and word.word_in_dict_control(user_word):
+    all_score = 0
+    if random_let.letters_control(user_word): #and word.word_in_dict_control(user_word):
+        user_column_int = int(user_column)
+        user_row_int = int(user_row)
+        random_let.word_place(user_word, user_direct, user_column_int, user_row_int, buttons)
         print("Pass")
         global user_all_words
         user_all_words.append(user_word)
+        score = random_let.pointsCount(user_word)
+        new_letters = random_let.user_letters_update( user_word, user_letters)
+        # random_let.user_letters_update(user_word, user_letters)
+        # all_score += score
+        # print(f"your score {all_score}")
+        us_let['text'] = new_letters
+        print(new_letters)
     else:
         print("Dont pass. Please enter your word")
 
-    print(user_word, user_location, user_direct)
-    print(user_all_words)
-    random_let.word_place(user_word, user_direct, user_column, user_row, buttons)
+    # print(user_word, user_location, user_direct)
+    # print(user_all_words)
 
 
 btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово

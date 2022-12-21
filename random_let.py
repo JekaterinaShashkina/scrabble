@@ -62,11 +62,23 @@ def letters_add():
     let = ' '.join(user_letters)
     
     return let
-print(*user_letters)
-if len(user_letters) < 7:
-    letters_add()
-# word = input(f"Введите слово из букв {let} ")
-# print(word)
+
+def user_letters_update(word, letters):
+    l_letters = list(letters)
+    for i in l_letters:
+        if i == " ":
+            l_letters.remove(i)
+    print(l_letters)
+    for i in word:
+        l_letters.remove(i)
+    print(len(l_letters))
+    while len(l_letters) < 7:
+        l = random.choice(bag)
+        l_letters.append(l)
+        bag.remove(l)
+    let = ' '.join(l_letters)
+    return let
+
 def letters_control(word):
     count = 0
     for i in word:
@@ -111,11 +123,11 @@ def pointsCount(word):
             
 # начисление пунктов за слово
 def word_points(word):
-    if word.word_in_dict_control(word) == True:
-        points = pointsCount(word)
-        print(f'Grats your word is {points} points')
-    else:
-        print(f"Sorry, you word is not found")
+    # if word.word_in_dict_control(word) == True:
+    points = pointsCount(word)
+    print(f'Grats your word is {points} points')
+    # else:
+    #     print(f"Sorry, you word is not found")
 
 
 def row_column_check(column, row):
@@ -129,7 +141,7 @@ def row_column_check(column, row):
 def word_place(word, direct, column, row, buttons):
     if direct == "Down":
         for i in word:
-            buttons[column-1][row-1]['text'] = i
+            buttons[column-1][row-1]['text'] = i.upper()
             column += 1
             print(i)
     if direct == "Right":
