@@ -125,3 +125,15 @@ def row_column_check(column, row):
     else:
         location = [int(row), int(column)]
     return location
+
+def word_place(word, direct, column, row, buttons):
+    if direct == "Down":
+        for i in word:
+            buttons[column-1][row-1]['text'] = i
+            column += 1
+            print(i)
+    if direct == "Right":
+            for i in word:
+                buttons[column-1][row-1]['text'] = i.upper()
+                row += 1
+                print(i)

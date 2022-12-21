@@ -63,38 +63,14 @@ direct_btn.grid(**position, column=1, row=3, padx=25)
 direct_btn = ttk.Radiobutton(frame, text=direct[1], value=direct[1], variable=selected_direct, command=select)
 direct_btn.grid(**position, column=1, row=4, padx=25, pady=5)
 
+frame.pack(anchor=N, padx=5, pady=5) # выводим рамку на экран
+
 
 user_all_words = []
 user_word = ""
 user_row = 0
 user_column = 0
 user_direct = ""
-
-def save_data(): # выводим текст на экран если соответствует условиям (не работает)
-    user_word = entered_text.get() # получаем введенный текст
-    user_column = column_entry.get()
-    user_row = row_entry.get()
-    user_direct = selected_direct.get()
-    user_location = random_let.row_column_check(user_column, user_row)
-    # print(user_all_words[0][0])
-    #print(user_all_words)
-    if random_let.letters_control(user_word) and word.word_in_dict_control(user_word):
-        print("Pass")
-        global user_all_words
-        user_all_words.append(user_word)
-    else:
-        print("Dont pass. Please enter your word")
-
-    print(user_word, user_location, user_direct)
-    print(user_all_words)
-
-
-btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
-btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
-
-frame.pack(anchor=N, padx=5, pady=5) # выводим рамку на экран
-# print(user_word, user_column, user_row, user_direct)
-print(user_all_words)
 
 # Создаем поле для игры 
 game_field = Canvas(bg="#ccc", width=600, height=600, borderwidth=0)
@@ -132,7 +108,30 @@ for i in range(ROW):
         btn = buttons[i][j]
         btn.grid(row=i, column=j)
 
+def save_data(): # выводим текст на экран если соответствует условиям (не работает)
+    user_word = entered_text.get() # получаем введенный текст
+    user_column = column_entry.get()
+    user_column = int(user_column)
+    user_row = row_entry.get()
+    user_row = int(user_row)
+    user_direct = selected_direct.get()
+    user_location = random_let.row_column_check(user_column, user_row)
+    # print(user_all_words[0][0])
+    #print(user_all_words)
+    if random_let.letters_control(user_word) and word.word_in_dict_control(user_word):
+        print("Pass")
+        global user_all_words
+        user_all_words.append(user_word)
+    else:
+        print("Dont pass. Please enter your word")
 
+    print(user_word, user_location, user_direct)
+    print(user_all_words)
+    random_let.word_place(user_word, user_direct, user_column, user_row, buttons)
+
+
+btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
+btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
 
 footer = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700)
 footer['padding'] = (50, 1)

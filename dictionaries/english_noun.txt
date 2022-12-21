@@ -61,6 +61,7 @@ management
 player
 variety
 video
+cinema
 week
 security
 country
