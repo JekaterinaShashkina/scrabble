@@ -65,19 +65,21 @@ def letters_add():
 
 def user_letters_update(word, letters):
     l_letters = list(letters)
+    used_l = list()
     for i in l_letters:
         if i == " ":
             l_letters.remove(i)
-    print(l_letters)
     for i in word:
         l_letters.remove(i)
-    print(len(l_letters))
+        used_l.append(i)
     while len(l_letters) < 7:
         l = random.choice(bag)
         l_letters.append(l)
         bag.remove(l)
     let = ' '.join(l_letters)
-    return let
+    used_letters = " ".join(used_l)
+    print(used_letters)
+    return let, used_letters
 
 def letters_control(word, letters):
     count = 0
