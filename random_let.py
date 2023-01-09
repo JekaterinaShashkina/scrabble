@@ -1,6 +1,6 @@
 import random
-import string
-import word
+# import string
+# import word
 bag = [] # создаем массив сумка букв
 def add_to_bag(tile, quantity): # добавляем буквы и количество букв в сумку 
     for _ in range(quantity):

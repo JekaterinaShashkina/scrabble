@@ -12,4 +12,4 @@ def word_in_dict_control(word):
         print(f"Sorry {word}")
         return False
 
-word_in_dict_control("river")
+# word_in_dict_control("river")

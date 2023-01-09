@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import random_let
-import word
+#import word
 
 
 def finish():
@@ -115,9 +115,8 @@ def save_data(): # выводим текст на экран если соотв
     user_row = row_entry.get()
     user_direct = selected_direct.get()
     user_location = random_let.row_column_check(user_column, user_row)
-    # print(user_all_words[0][0])
-    #print(user_all_words)
-    if random_let.letters_control(user_word, user_letters): #and word.word_in_dict_control(user_word):
+
+    if random_let.letters_control(user_word, user_letters) and word.word_in_dict_control(user_word):
         user_column_int = int(user_column)
         user_row_int = int(user_row)
         random_let.word_place(user_word, user_direct, user_column_int, user_row_int, buttons)
@@ -132,10 +131,11 @@ def save_data(): # выводим текст на экран если соотв
         all_score += score
         print(f"your score {score}")
         # user_letters = new_letters
-        us_let['text'] = user_letters
+        us_let['text'] = new_letters
+       # user_letters = user_letters.get()
         print(new_letters)
         print(user_all_words)
-        print(all_score)
+        print(f"all score {all_score}")
     else:
         print("Dont pass. Please enter your word")
 
@@ -152,9 +152,9 @@ footer['padding'] = (50, 1)
 timer = ttk.Label(footer, text='Time: ')
 timer['padding'] = (10, 0, 130, 0)
 timer.grid(column=0, row=0, sticky=E) 
-score = ttk.Label(footer, text=f"Your score: {all_score}")
-score['padding'] = (10, 0, 130, 0)
-score.grid(column=1, row=0)
+view_score = ttk.Label(footer, text=f"Your score: {all_score}")
+view_score['padding'] = (10, 0, 130, 0)
+view_score.grid(column=1, row=0)
 
 btn_new_game = ttk.Button(footer) # Создаем кнопку новой игры
 btn_new_game.grid(column=2, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
