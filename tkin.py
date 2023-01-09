@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import random_let
-#import word
+import word
 
 
 def finish():
@@ -32,7 +32,7 @@ frame['padding'] = (100, 10)
 user_word_label = ttk.Label(frame, justify=LEFT, text="Your word ")
 user_word_label.grid(column=0, row=0, sticky=W)  # выводим слово которое пользователь придумал
 # user_word_label.pack()
-user_words_list = ttk.Label(frame, text="List of your words: ")
+user_words_list = ttk.Label(frame, text=f"List of your words: ")
 user_words_list.grid(column=2, row=0)
 entered_text = ttk.Entry(frame)
 entered_text.grid(column=1, row=0, sticky=W, padx=25, pady=5)
@@ -72,6 +72,7 @@ user_row = 0
 user_column = 0
 user_direct = ""
 all_score = 0
+listbox_words = Listbox()
 
 # Создаем поле для игры 
 game_field = Canvas(bg="#ccc", width=600, height=600, borderwidth=0)
@@ -102,21 +103,21 @@ for coord in TRIPLE_LETTER_SCORE:
     buttons[coord[0]][coord[1]]['text'] = "TLS"
 for coord in DOUBLE_LETTER_SCORE:
     buttons[coord[0]][coord[1]]['text'] = "DLS"
-buttons[7][7]['text'] = '***'
+buttons[6][6]['text'] = '***'
 
 for i in range(ROW):
     for j in range(COLUMNS):
         btn = buttons[i][j]
         btn.grid(row=i, column=j)
 
-def save_data(): # выводим текст на экран если соответствует условиям (не работает)
+def save_data(): # выводим текст на экран если соответствует условиям
     user_word = entered_text.get() # получаем введенный текст
     user_column = column_entry.get()
     user_row = row_entry.get()
     user_direct = selected_direct.get()
     user_location = random_let.row_column_check(user_column, user_row)
 
-    if random_let.letters_control(user_word, user_letters) and word.word_in_dict_control(user_word):
+    if random_let.letters_control(user_word, user_letters): #and word.word_in_dict_control(user_word)
         user_column_int = int(user_column)
         user_row_int = int(user_row)
         random_let.word_place(user_word, user_direct, user_column_int, user_row_int, buttons)
@@ -124,25 +125,22 @@ def save_data(): # выводим текст на экран если соотв
         global user_all_words
         user_all_words.append(user_word)
         score = random_let.pointsCount(user_word)
-
-        new_letters = random_let.user_letters_update( user_word, user_letters)
-        # random_let.user_letters_update(user_word, user_letters)
+       
+        new_letters, used_letters = random_let.user_letters_update( user_word, user_letters)
         global all_score 
         all_score += score
         print(f"your score {score}")
-        # user_letters = new_letters
         us_let['text'] = new_letters
-       # user_letters = user_letters.get()
-        print(new_letters)
-        print(user_all_words)
+        # user_letters = us_let.get()
+        print(new_letters, " ", user_letters, " ", used_letters)
+        user_all_words_var = StringVar(value=user_all_words)
+        user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
+        user_all_words_listbox.grid(column=2, row=1)
         print(f"all score {all_score}")
     else:
         print("Dont pass. Please enter your word")
-
-    # print(user_word, user_location, user_direct)'
-
-# listbox for user_all_words
-
+        
+print(user_letters)
 btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
 btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
 
