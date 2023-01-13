@@ -78,7 +78,7 @@ def user_letters_update(word, letters):
         bag.remove(l)
     let = ' '.join(l_letters)
     used_letters = " ".join(used_l)
-    print(used_letters)
+    # print(used_letters)
     return let, used_letters
 
 def letters_control(word, letters):
@@ -135,19 +135,49 @@ def word_points(word):
 def row_column_check(column, row):
     location = []
     if (column == "" or row == "") or (column not in [str(x) for x in range(15)]) or (row not in [str(x) for x in range(15)]):
-        location = [-1,-1]
+        return "Location is not valid"
     else:
         location = [int(row), int(column)]
     return location
 
-def word_place(word, direct, column, row, buttons):
+def word_place(word, direct, row, column, buttons):
     if direct == "Down":
+
         for i in word:
-            buttons[column-1][row-1]['text'] = i.upper()
-            column += 1
-            print(i)
+            buttons[row-1][column-1]['text'] = i.upper()
+            row += 1
+            # print(i)
     if direct == "Right":
             for i in word:
-                buttons[column-1][row-1]['text'] = i.upper()
-                row += 1
-                print(i)
+                buttons[row-1][column-1]['text'] = i.upper()
+                column += 1
+                # print(i)
+
+def control_buttons(direct, column, row, buttons, word):
+    space_letters_list = list()
+    for i in word:
+        if buttons[row - 1][column - 1]['text'] == " " or buttons[column - 1][row - 1]['text'] == "TWS" or buttons[column - 1][row - 1]['text'] == "TLS" or buttons[column - 1][row - 1]['text'] == "DWS" or buttons[column - 1][row - 1]['text'] == "DLS" or buttons[column - 1][row - 1]['text'] == "...":
+            print(buttons[row-1][column-1])
+            space_letters_list.append(" ")
+        else:
+            space_letters_list.append(buttons[row - 1][column - 1]['text'])
+        if direct == "Down":
+            column += 1
+        else:
+            row += 1
+    
+    print("spl: ", space_letters_list)
+    return space_letters_list
+
+def word_and_field_control(direct, column, row, buttons, word):
+    spl = control_buttons(direct, column, row, buttons, word)
+    word_l = list(word)
+    for i in range(len(spl)):
+        if spl[i] != " ":
+            if word_l[i].upper() == spl[i]:
+                return True
+            else:
+                print("you need other word place")
+
+
+# word_and_field_control('hello', ['h', ' ', ' ', 'l', 'o'])

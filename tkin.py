@@ -25,7 +25,6 @@ user_letters = random_let.letters_add()
 us_let = ttk.Label(text=user_letters)
 us_let.pack()
 
-
 frame = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700) # Создаем новое окно в корневом окне
 frame['padding'] = (100, 10)
 
@@ -103,7 +102,7 @@ for coord in TRIPLE_LETTER_SCORE:
     buttons[coord[0]][coord[1]]['text'] = "TLS"
 for coord in DOUBLE_LETTER_SCORE:
     buttons[coord[0]][coord[1]]['text'] = "DLS"
-buttons[6][6]['text'] = '***'
+buttons[7][7]['text'] = '***'
 
 for i in range(ROW):
     for j in range(COLUMNS):
@@ -118,29 +117,35 @@ def save_data(): # выводим текст на экран если соотв
     user_location = random_let.row_column_check(user_column, user_row)
 
     if random_let.letters_control(user_word, user_letters): #and word.word_in_dict_control(user_word)
+        global user_all_words
         user_column_int = int(user_column)
         user_row_int = int(user_row)
-        random_let.word_place(user_word, user_direct, user_column_int, user_row_int, buttons)
-        print("Pass")
-        global user_all_words
+        if len(user_all_words)==0:
+            random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
+            print("Pass")
+        else:
+            # print(buttons[user_column_int-1][user_row_int-1]['text'])
+            if random_let.word_and_field_control(direct, user_column_int, user_row_int, buttons, user_word):
+                random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
+                print("second")
         user_all_words.append(user_word)
         score = random_let.pointsCount(user_word)
-       
+        global new_letters
         new_letters, used_letters = random_let.user_letters_update( user_word, user_letters)
         global all_score 
         all_score += score
         print(f"your score {score}")
         us_let['text'] = new_letters
         # user_letters = us_let.get()
+        #user_letters = str(new_letters)
         print(new_letters, " ", user_letters, " ", used_letters)
         user_all_words_var = StringVar(value=user_all_words)
         user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
-        user_all_words_listbox.grid(column=2, row=1)
+        user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
         print(f"all score {all_score}")
     else:
         print("Dont pass. Please enter your word")
-        
-print(user_letters)
+
 btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
 btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
 
