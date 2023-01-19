@@ -90,7 +90,7 @@ game_field.pack(anchor=CENTER, expand=1)
 
 # стили для бонусных полей
 btn_style =ttk.Style()
-btn_style.configure("SL.TLabel", background="#FBFBDD")
+btn_style.configure("SL.TButton", background="#FBFBDD")
 btn_style.configure("TWS.TLabel", background="#B2DFDB")
 btn_style.configure("TLS.TLabel", background="#B7F590")
 btn_style.configure("DWS.TLabel", background="#F9A8C9")
@@ -108,7 +108,7 @@ buttons =[]
 for i in range(ROW):
     temp = []
     for j in range(COLUMNS):
-        btn = ttk.Button(game_field, width=5, padding=2) #, style="SL.TLabel")
+        btn = ttk.Button(game_field, width=5, padding=2, style="SL.TButton") #, style="SL.TLabel")
         temp.append(btn)
     buttons.append(temp)
 
@@ -210,10 +210,10 @@ btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
 footer = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700)
 footer['padding'] = (50, 1)
 
-minutes = StringVar()
-seconds = StringVar()
-minutes.set('00')
-seconds.set('00')
+# minutes = StringVar()
+# seconds = StringVar()
+minutes = '00'
+seconds ='00'
 def countdown():
     t = 10
     global minutes
@@ -244,11 +244,11 @@ view_score = ttk.Label(footer, text=f"Your score: {all_score}")
 view_score['padding'] = (10, 0, 130, 0)
 view_score.grid(column=2, row=0)
 
-# def restart_program():
-#     rootWindow.destroy()
-#     os.startfile("tkin.py")
+def restart_program():
+    rootWindow.destroy()
+    os.startfile("tkin.py")
 
-btn_new_game = ttk.Button(footer) #command=restart_program) # Создаем кнопку новой игры
+btn_new_game = ttk.Button(footer, command=restart_program) #command=restart_program) # Создаем кнопку новой игры
 btn_new_game.grid(column=3, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
 btn_new_game["text"] ="New Game" # устанавливаем параметр text на кнопку новая игра
 btn_new_game['padding'] = (10, 0, 10, 0)
