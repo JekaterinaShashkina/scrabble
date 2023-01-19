@@ -70,8 +70,9 @@ def user_letters_update(word, letters):
         if i == " ":
             l_letters.remove(i)
     for i in word:
-        l_letters.remove(i)
-        used_l.append(i)
+        if i in letters:
+            l_letters.remove(i)
+            used_l.append(i)
     while len(l_letters) < 7:
         l = random.choice(bag)
         l_letters.append(l)
@@ -81,10 +82,10 @@ def user_letters_update(word, letters):
     # print(used_letters)
     return let, used_letters
 
-def letters_control(word, letters):
+def letters_control(word, letters, user_let):
     count = 0
     for i in word:
-        if i in letters:
+        if i in letters or i in user_let:
             count += 1
     if count == len(word):
         print('Отлично')
@@ -178,6 +179,18 @@ def word_and_field_control(direct, column, row, buttons, word):
                 return True
             else:
                 print("you need other word place")
+                return False
 
 
 # word_and_field_control('hello', ['h', ' ', ' ', 'l', 'o'])
+
+def word_location_control(user_all_words, column, row, direct, buttons, word):
+    if len(user_all_words) == 0:
+        if column == 8 and row == 8:
+            return True
+        else:
+            print("Please begin from ***")
+            return False
+    else:
+        word_and_field_control(direct, column, row, buttons, word)
+

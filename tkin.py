@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 import random_let
 import word
+import os
+import time
 
 
 def finish():
@@ -15,39 +17,43 @@ rootWindow.geometry("700x800+400+0") # устанавливаем размеры
 # rootWindow.attributes("-alpha", 0.2) # установка прозрачности
 # rootWindow.attributes("-toolwindow", True) # отключение верхней панели окна
 
-rootWindow.resizable(False, False) # Неизменяемые размеры окна
+# rootWindow.resizable(False, False) # Неизменяемые размеры окна
 gameName = Label(text="SCRABBLE") # создаем текстовую метку
 gameName.pack() # размещаем метку в окне
-rootWindow.protocol("WM_DELETE_WINDOW", finish) # хрень какая то перехватываем закрытие окна 
+# rootWindow.protocol("WM_DELETE_WINDOW", finish) # хрень какая то перехватываем закрытие окна 
 
 #получаем набор 7 букв добавляем его на поле
-user_letters = random_let.letters_add()
-us_let = ttk.Label(text=user_letters)
+l = random_let.letters_add()
+us_let = ttk.Label(text=l)
 us_let.pack()
-
+# рамка с вводом слова кнопкой сейва и листом со словами
 frame = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700) # Создаем новое окно в корневом окне
 frame['padding'] = (100, 10)
 
+# выводим слово которое пользователь придумал
 user_word_label = ttk.Label(frame, justify=LEFT, text="Your word ")
-user_word_label.grid(column=0, row=0, sticky=W)  # выводим слово которое пользователь придумал
-# user_word_label.pack()
+user_word_label.grid(column=0, row=0, sticky=W)  
+
+# список слов польззователя
 user_words_list = ttk.Label(frame, text=f"List of your words: ")
 user_words_list.grid(column=2, row=0)
 entered_text = ttk.Entry(frame)
 entered_text.grid(column=1, row=0, sticky=W, padx=25, pady=5)
-# entered_text.pack(anchor=S, padx=6, pady=6)
 
-row_label = ttk.Label(frame, text="Enter row number") # выбираем ряд в который устанавливаем слово
+# выбираем ряд в который устанавливаем слово
+row_label = ttk.Label(frame, text="Enter row number") 
 row_label.grid(column=0, row=1, sticky=W)
 row_entry = ttk.Entry(frame, width=3)
 row_entry.grid(column=1, row=1, sticky=W, padx=25, pady=5)
- 
-column_label = ttk.Label(frame, text="Enter column number") # выбираем колонку с которой слово начинается
+
+# выбираем колонку с которой слово начинается
+column_label = ttk.Label(frame, text="Enter column number")
 column_label.grid(column=0, row=2, sticky=W)
 column_entry = ttk.Entry(frame, width=3)
 column_entry.grid(column=1, row=2, sticky=W, padx=25, pady=5)
 
-position = {"sticky":W} # выбираем направление в котором устанавливаем слово
+# выбираем направление в котором устанавливаем слово
+position = {"sticky":W} 
 direct = ["Right", "Down"]
 selected_direct = StringVar()
 header = ttk.Label(frame, text="Choose direction")
@@ -56,22 +62,24 @@ header.grid(column=0, row=3, sticky=W)
 def select():
     header.config(text=f"Your choice {selected_direct.get()}")
 
-
+ # Радиокнопки 
 direct_btn = ttk.Radiobutton(frame, text=direct[0], value=direct[0], variable=selected_direct, command=select)
 direct_btn.grid(**position, column=1, row=3, padx=25)
 direct_btn = ttk.Radiobutton(frame, text=direct[1], value=direct[1], variable=selected_direct, command=select)
 direct_btn.grid(**position, column=1, row=4, padx=25, pady=5)
 
-frame.pack(anchor=N, padx=5, pady=5) # выводим рамку на экран
+# устанавливаем рамку
+frame.pack(anchor=N, padx=5, pady=5) 
 
 
-user_all_words = []
+user_all_words = [] # список всех слов
+user_used_letters = []
 user_word = ""
 user_row = 0
 user_column = 0
 user_direct = ""
 all_score = 0
-listbox_words = Listbox()
+listbox_words = Listbox() # листбокс куда помещаются все слова
 
 # Создаем поле для игры 
 game_field = Canvas(bg="#ccc", width=600, height=600, borderwidth=0)
@@ -80,6 +88,16 @@ game_field.pack(anchor=CENTER, expand=1)
 # column_label = ttk.Label(game_field, text="1    2   3   4   5   6   7   8   9   ")
 # column_label.grid(column=0, row=0)
 
+# стили для бонусных полей
+btn_style =ttk.Style()
+btn_style.configure("SL.TLabel", background="#FBFBDD")
+btn_style.configure("TWS.TLabel", background="#B2DFDB")
+btn_style.configure("TLS.TLabel", background="#B7F590")
+btn_style.configure("DWS.TLabel", background="#F9A8C9")
+btn_style.configure("DLS.TLabel", background="#E8AEF9")
+btn_style.configure("POINT.TLabel", background="#A53EFB")
+
+# создаем поле для игры с бонусными полями
 ROW = 15
 COLUMNS = 15
 TRIPLE_WORD_SCORE = ((0,0), (7, 0), (14,0), (0, 7), (14, 7), (0, 14), (7, 14), (14,14))  # поля с утраиванием слова 
@@ -90,79 +108,151 @@ buttons =[]
 for i in range(ROW):
     temp = []
     for j in range(COLUMNS):
-        btn = ttk.Button(game_field, width=5, padding=2)
+        btn = ttk.Button(game_field, width=5, padding=2) #, style="SL.TLabel")
         temp.append(btn)
     buttons.append(temp)
 
 for coord in TRIPLE_WORD_SCORE: # присваивание полям текста об удваивании или утраивании
     buttons[coord[0]][coord[1]]['text'] = "TWS"
+    buttons[coord[0]][coord[1]]["style"] = "TWS.TLabel" 
 for coord in DOUBLE_WORD_SCORE:
     buttons[coord[0]][coord[1]]['text'] = "DWS"
+    buttons[coord[0]][coord[1]]["style"] = "DWS.TLabel" 
 for coord in TRIPLE_LETTER_SCORE:
     buttons[coord[0]][coord[1]]['text'] = "TLS"
+    buttons[coord[0]][coord[1]]["style"] = "TLS.TLabel" 
 for coord in DOUBLE_LETTER_SCORE:
     buttons[coord[0]][coord[1]]['text'] = "DLS"
+    buttons[coord[0]][coord[1]]["style"] = "DLS.TLabel" 
 buttons[7][7]['text'] = '***'
+buttons[7][7]['style'] = 'POINT.TLabel'
+
 
 for i in range(ROW):
     for j in range(COLUMNS):
         btn = buttons[i][j]
         btn.grid(row=i, column=j)
 
-def save_data(): # выводим текст на экран если соответствует условиям
+# функция для обработки внесенных данных 
+def save_data(): 
     user_word = entered_text.get() # получаем введенный текст
     user_column = column_entry.get()
     user_row = row_entry.get()
     user_direct = selected_direct.get()
     user_location = random_let.row_column_check(user_column, user_row)
-
-    if random_let.letters_control(user_word, user_letters): #and word.word_in_dict_control(user_word)
-        global user_all_words
-        user_column_int = int(user_column)
-        user_row_int = int(user_row)
+    global new_letters
+    global user_all_words
+    global all_score 
+    global user_used_letters
+    user_column_int = int(user_column)
+    user_row_int = int(user_row)
+    # проверка слова на соответствие букв и на присутствие в словаре
+    user_letters = us_let.cget("text") # получаем буквы из списка в приожении
+    if random_let.letters_control(user_word, user_letters, user_used_letters): #and random_let.word_location_control(user_all_words, user_column_int, user_row_int, user_direct, buttons, user_word): #and word.word_in_dict_control(user_word) 
+        # random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
+        # print(user_all_words, user_column_int, user_row_int, user_direct, user_word)
         if len(user_all_words)==0:
-            random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
-            print("Pass")
-        else:
+            if  user_column_int == 8 and user_row_int == 8: # если в списке слов нет слов просто поомещаем слово в ту колонку и ряд который юзер ввел
+                random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
+                print("Pass")
+                user_all_words.append(user_word)
+                score = random_let.pointsCount(user_word)
+                l, used_letters = random_let.user_letters_update( user_word, user_letters)
+                us_let['text'] = l
+                u_l = list(used_letters)
+                #user_letters = str(new_letters)
+                print(l, " ", user_letters, " ", u_l)
+                user_all_words_var = StringVar(value=user_all_words)
+                user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
+                user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
+
+                all_score += score
+                for i in u_l:
+                    if i != " ":
+                        user_used_letters.append(i)
+                print(f"used letters list {user_used_letters}")
+                print(f"your score {score}")
+                print(f"all score {all_score}")
+            else:
+                print("wrong column or row number. Please begin from ***")
+        else: # если в списке слов уже есть слова проверяем что буквы в пересекающемся слове совпадают
             # print(buttons[user_column_int-1][user_row_int-1]['text'])
             if random_let.word_and_field_control(direct, user_column_int, user_row_int, buttons, user_word):
                 random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
                 print("second")
-        user_all_words.append(user_word)
-        score = random_let.pointsCount(user_word)
-        global new_letters
-        new_letters, used_letters = random_let.user_letters_update( user_word, user_letters)
-        global all_score 
-        all_score += score
-        print(f"your score {score}")
-        us_let['text'] = new_letters
-        # user_letters = us_let.get()
-        #user_letters = str(new_letters)
-        print(new_letters, " ", user_letters, " ", used_letters)
-        user_all_words_var = StringVar(value=user_all_words)
-        user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
-        user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
-        print(f"all score {all_score}")
+                user_all_words.append(user_word)
+                score = random_let.pointsCount(user_word)
+                l, used_letters = random_let.user_letters_update( user_word, user_letters)
+                us_let['text'] = l
+                u_l = list(used_letters)
+                #user_letters = str(new_letters)
+                print(l, " ", user_letters, " ", u_l)
+                user_all_words_var = StringVar(value=user_all_words)
+                user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
+                user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
+
+                all_score += score
+                for i in u_l:
+                    if i != " ":
+                        user_used_letters.append(i)
+                print(f"used letters list {user_used_letters}")
+                print(f"your score {score}")
+                print(f"all score {all_score}")
     else:
         print("Dont pass. Please enter your word")
 
 btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
 btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
 
+
+# print(f"letters {l}")
+
 footer = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700)
 footer['padding'] = (50, 1)
 
-timer = ttk.Label(footer, text='Time: ')
+minutes = StringVar()
+seconds = StringVar()
+minutes.set('00')
+seconds.set('00')
+def countdown():
+    t = 10
+    global minutes
+    global seconds
+    while t > -1:
+        mins, secs = divmod(t, 60)
+        seconds.set(secs)
+        minutes.set(mins)
+        # minutes = '{:02d}'.format(mins)
+        # seconds = '{:02d}'.format(secs)
+
+        # print(timer, end="\r")
+        rootWindow.update()
+        time.sleep(1)
+        if t == 0:
+            seconds.set("00")
+            minutes.set("00")
+        t -= 1
+      
+    print('Fire in the hole!!')
+
+timer = ttk.Label(footer, text=f'Time: {minutes}:{seconds} ', background="#856ff8")
 timer['padding'] = (10, 0, 130, 0)
 timer.grid(column=0, row=0, sticky=E) 
+timer_btn =ttk.Button(footer, text="Start timer", command=countdown)
+timer_btn.grid(column=1, row=0)
 view_score = ttk.Label(footer, text=f"Your score: {all_score}")
 view_score['padding'] = (10, 0, 130, 0)
-view_score.grid(column=1, row=0)
+view_score.grid(column=2, row=0)
 
-btn_new_game = ttk.Button(footer) # Создаем кнопку новой игры
-btn_new_game.grid(column=2, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
+# def restart_program():
+#     rootWindow.destroy()
+#     os.startfile("tkin.py")
+
+btn_new_game = ttk.Button(footer) #command=restart_program) # Создаем кнопку новой игры
+btn_new_game.grid(column=3, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
 btn_new_game["text"] ="New Game" # устанавливаем параметр text на кнопку новая игра
 btn_new_game['padding'] = (10, 0, 10, 0)
+
 
 footer.pack(anchor=S, padx=5, pady=5) # выводим рамку на экран
 rootWindow.mainloop()
