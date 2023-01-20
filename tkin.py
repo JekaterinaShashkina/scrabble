@@ -1,9 +1,11 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 import random_let
 import word
 import os
 import time
+
 
 
 def finish():
@@ -11,9 +13,10 @@ def finish():
     print("Закрытие окна")
 
 rootWindow = Tk() # создаем новый обьект - окно
+ttk.Style().configure(".",  font="helvetica 9", foreground="#004D40")  
 rootWindow.title("SCRABBLE for everyone!!!") # устанавливаем заголовок окна
 rootWindow.iconbitmap(default="img/scrabble.ico")
-rootWindow.geometry("700x800+400+0") # устанавливаем размеры окна
+rootWindow.geometry("850x800+400+0") # устанавливаем размеры окна
 # rootWindow.attributes("-alpha", 0.2) # установка прозрачности
 # rootWindow.attributes("-toolwindow", True) # отключение верхней панели окна
 
@@ -148,7 +151,7 @@ def save_data():
     user_row_int = int(user_row)
     # проверка слова на соответствие букв и на присутствие в словаре
     user_letters = us_let.cget("text") # получаем буквы из списка в приожении
-    if random_let.letters_control(user_word, user_letters, user_used_letters): #and random_let.word_location_control(user_all_words, user_column_int, user_row_int, user_direct, buttons, user_word): #and word.word_in_dict_control(user_word) 
+    if random_let.letters_control(user_word, user_letters, user_used_letters) and word.word_in_dict_control(user_word):
         # random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
         # print(user_all_words, user_column_int, user_row_int, user_direct, user_word)
         if len(user_all_words)==0:
@@ -173,6 +176,7 @@ def save_data():
                 print(f"used letters list {user_used_letters}")
                 print(f"your score {score}")
                 print(f"all score {all_score}")
+                view_score["text"]=f"Your score: {all_score}"
             else:
                 print("wrong column or row number. Please begin from ***")
         else: # если в списке слов уже есть слова проверяем что буквы в пересекающемся слове совпадают
@@ -198,6 +202,8 @@ def save_data():
                 print(f"used letters list {user_used_letters}")
                 print(f"your score {score}")
                 print(f"all score {all_score}")
+                view_score["text"]=f"Your score: {all_score}"
+
     else:
         print("Dont pass. Please enter your word")
 
@@ -210,10 +216,10 @@ btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
 footer = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700)
 footer['padding'] = (50, 1)
 
-# minutes = StringVar()
-# seconds = StringVar()
-minutes = '00'
-seconds ='00'
+minutes = StringVar()
+seconds = StringVar()
+minutes.set('00')
+seconds.set ('10')
 def countdown():
     t = 10
     global minutes
@@ -222,6 +228,7 @@ def countdown():
         mins, secs = divmod(t, 60)
         seconds.set(secs)
         minutes.set(mins)
+        # timer["text"] = f'Time: '
         # minutes = '{:02d}'.format(mins)
         # seconds = '{:02d}'.format(secs)
 
@@ -231,25 +238,28 @@ def countdown():
         if t == 0:
             seconds.set("00")
             minutes.set("00")
+            messagebox.showinfo("Time Countdown", "Game over")
         t -= 1
       
-    print('Fire in the hole!!')
-
-timer = ttk.Label(footer, text=f'Time: {minutes}:{seconds} ', background="#856ff8")
+timer = ttk.Label(footer, text=f'Time:', background="#856ff8")
+minuteEntry = Entry(footer, width=3, textvariable=minutes)
+minuteEntry.grid(column=1, row=0, sticky=E)
+secondEntry = Entry(footer, width=3, textvariable=seconds)
+secondEntry.grid(column=2, row=0, sticky=E)
 timer['padding'] = (10, 0, 130, 0)
 timer.grid(column=0, row=0, sticky=E) 
 timer_btn =ttk.Button(footer, text="Start timer", command=countdown)
-timer_btn.grid(column=1, row=0)
+timer_btn.grid(column=3, row=0)
 view_score = ttk.Label(footer, text=f"Your score: {all_score}")
 view_score['padding'] = (10, 0, 130, 0)
-view_score.grid(column=2, row=0)
+view_score.grid(column=4, row=0)
 
 def restart_program():
     rootWindow.destroy()
     os.startfile("tkin.py")
 
 btn_new_game = ttk.Button(footer, command=restart_program) #command=restart_program) # Создаем кнопку новой игры
-btn_new_game.grid(column=3, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
+btn_new_game.grid(column=5, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
 btn_new_game["text"] ="New Game" # устанавливаем параметр text на кнопку новая игра
 btn_new_game['padding'] = (10, 0, 10, 0)
 

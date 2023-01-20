@@ -1,4 +1,6 @@
 import random
+from functools import reduce
+from operator import add
 # import string
 # import word
 bag = [] # создаем массив сумка букв
@@ -97,6 +99,24 @@ def letters_control(word, letters, user_let):
 # en_dict = '/dictionaries/english_noun.txt'
 # ee_dict = '/dictionaries/estonian_nouns.txt'
 # ru_dict = '/dictionaries/russian_nouns.txt'
+premium_spots = []
+def word_place(word, direct, row, column, buttons):
+    global premium_spots
+    if direct == "Down":
+
+        for i in word:
+            if buttons[row-1][column-1]['text'] != " ":
+                premium_spots.append((i, buttons[row-1][column-1]['text']))
+            buttons[row-1][column-1]['text'] = i.upper()
+            row += 1
+            # print(i)
+    if direct == "Right":
+            for i in word:
+                if buttons[row-1][column-1]['text'] != " ":
+                    premium_spots.append((i, buttons[row-1][column-1]['text']))
+                buttons[row-1][column-1]['text'] = i.upper()
+                column += 1
+                # print(i)
 
 def fun(x):
     dct = {
@@ -108,9 +128,28 @@ def fun(x):
             return dct.get(key) # метод get ищет значение по ключу, если находит ключ возвращает значение
 # Суммируем очки за слово 
 def pointsCount(word):
-    points = sum(map(fun, word))
-    return points
+    global premium_spots
+    # points = list(map(fun, word))
+    # print(points)
+    # return points
+    word_score = 0
+    # p = 0
+    for letter in word:
+        for spot in premium_spots:
+            if letter == spot[0]:
+                if spot[1] == "TLS":
+                    word_score += fun(letter) * 2
+                elif spot[1] == 'DLS':
+                    word_score += fun(letter)
+        word_score += fun(letter)
+    for spot in premium_spots:
+        if spot[1] == "TWS":
+            word_score *= 3
+        elif spot[1] == "DWS":
+            word_score *= 2
 
+    return word_score
+# print(pointsCount("hi"))
 # # Проверка в словаре 
 # def word_in_dict_control(word):
 #     with open('./dictionaries/english_noun.txt', 'r') as en_dict: # открываем файл на чтение
@@ -141,18 +180,7 @@ def row_column_check(column, row):
         location = [int(row), int(column)]
     return location
 
-def word_place(word, direct, row, column, buttons):
-    if direct == "Down":
 
-        for i in word:
-            buttons[row-1][column-1]['text'] = i.upper()
-            row += 1
-            # print(i)
-    if direct == "Right":
-            for i in word:
-                buttons[row-1][column-1]['text'] = i.upper()
-                column += 1
-                # print(i)
 
 def control_buttons(direct, column, row, buttons, word):
     space_letters_list = list()
