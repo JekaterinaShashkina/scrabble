@@ -21,7 +21,7 @@ rootWindow.geometry("850x800+400+0") # устанавливаем размеры
 # rootWindow.attributes("-toolwindow", True) # отключение верхней панели окна
 
 # rootWindow.resizable(False, False) # Неизменяемые размеры окна
-gameName = Label(text="SCRABBLE") # создаем текстовую метку
+gameName = Label(text="SCRABBLE", font="Helvetica 16 italic", foreground="#A53EFB") # создаем текстовую метку
 gameName.pack() # размещаем метку в окне
 # rootWindow.protocol("WM_DELETE_WINDOW", finish) # хрень какая то перехватываем закрытие окна 
 
