@@ -25,23 +25,27 @@ gameName = Label(text="SCRABBLE") # создаем текстовую метку
 gameName.pack() # размещаем метку в окне
 # rootWindow.protocol("WM_DELETE_WINDOW", finish) # хрень какая то перехватываем закрытие окна 
 
-#получаем набор 7 букв добавляем его на поле
-l = random_let.letters_add()
-us_let = ttk.Label(text=l)
+us_let = ttk.Label()
 us_let.pack()
 # рамка с вводом слова кнопкой сейва и листом со словами
 frame = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700) # Создаем новое окно в корневом окне
-frame['padding'] = (100, 10)
+frame['padding'] = (80, 10)
 
 # выводим слово которое пользователь придумал
 user_word_label = ttk.Label(frame, justify=LEFT, text="Your word ")
 user_word_label.grid(column=0, row=0, sticky=W)  
 
+def is_valid(newval):
+    if newval == "" or newval not in [str(x) for x in range(15)]:
+        return False
+    else:
+        return True
+check = (frame.register(is_valid), "%P")
 # список слов польззователя
 user_words_list = ttk.Label(frame, text=f"List of your words: ")
 user_words_list.grid(column=2, row=0)
 entered_text = ttk.Entry(frame)
-entered_text.grid(column=1, row=0, sticky=W, padx=25, pady=5)
+entered_text.grid(column=1, row=0, sticky=W, padx=25)
 
 # выбираем ряд в который устанавливаем слово
 row_label = ttk.Label(frame, text="Enter row number") 
@@ -57,13 +61,14 @@ column_entry.grid(column=1, row=2, sticky=W, padx=25, pady=5)
 
 # выбираем направление в котором устанавливаем слово
 position = {"sticky":W} 
+# радиокнопки, выбор направления
 direct = ["Right", "Down"]
 selected_direct = StringVar()
-header = ttk.Label(frame, text="Choose direction")
-header.grid(column=0, row=3, sticky=W)
+direction = ttk.Label(frame, text="Choose direction")
+direction.grid(column=0, row=3, sticky=W)
 
 def select():
-    header.config(text=f"Your choice {selected_direct.get()}")
+    direction.config(text=f"Your choice {selected_direct.get()}")
 
  # Радиокнопки 
 direct_btn = ttk.Radiobutton(frame, text=direct[0], value=direct[0], variable=selected_direct, command=select)
@@ -71,9 +76,43 @@ direct_btn.grid(**position, column=1, row=3, padx=25)
 direct_btn = ttk.Radiobutton(frame, text=direct[1], value=direct[1], variable=selected_direct, command=select)
 direct_btn.grid(**position, column=1, row=4, padx=25, pady=5)
 
+# выбор языка
+lang = ["English", "Estonian", "Russian"]
+selected_language = StringVar()
+language = ttk.Label(frame, text="Language")
+language.grid(column=3, row=0)
+# url_en = 
+img_en =PhotoImage(file="img/icon-en.png")
+eng_btn = ttk.Button(frame, image=img_en, padding=0, text="English")
+eng_btn.config(command=lambda button=eng_btn: lang_choice(button))
+eng_btn.grid(column=3, row=1, ipady=1, ipadx=1, sticky=E)
+# url_est = 
+img_est =PhotoImage(file="img/icon-est.png")
+est_btn = ttk.Button(frame, image=img_est, padding=0, text="Estonian")
+est_btn.config(command=lambda button=est_btn: lang_choice(button))
+est_btn.grid(column=3, row=2, ipady=1, ipadx=1, sticky=E)
+# url_rus = 
+img_rus =PhotoImage(file="img/icon-rus.png")
+rus_btn = ttk.Button(frame, image=img_rus, padding=0, text="Russian")
+rus_btn.config(command=lambda button=rus_btn: lang_choice(button))
+rus_btn.grid(column=3, row=3, ipady=1, ipadx=1, sticky=E)
+
+def lang_choice(clicked_button):
+    selected_language = clicked_button["text"]
+    language.config(text=f"{selected_language}")
+    print(selected_language)
+
+
 # устанавливаем рамку
 frame.pack(anchor=N, padx=5, pady=5) 
 
+#получаем набор 7 букв добавляем его на поле
+l = random_let.letters_add(language["text"])
+print(l)
+us_let["text"] = l
+
+message = ttk.Label(font="helvetica 11", justify=CENTER, text="Welcome to our game. Here you can check your words knowledge")
+message.pack()
 
 user_all_words = [] # список всех слов
 user_used_letters = []
@@ -143,32 +182,37 @@ def save_data():
     user_row = row_entry.get()
     user_direct = selected_direct.get()
     user_location = random_let.row_column_check(user_column, user_row)
+    user_lang = language["text"]
     global new_letters
     global user_all_words
     global all_score 
     global user_used_letters
-    user_column_int = int(user_column)
-    user_row_int = int(user_row)
-    # проверка слова на соответствие букв и на присутствие в словаре
+    global message
+    
+    user_column_int = 0 if user_column == "" else int(user_column)
+    user_row_int = 0 if user_row == "" else int(user_row)
+
+   # проверка слова на соответствие букв и на присутствие в словаре
     user_letters = us_let.cget("text") # получаем буквы из списка в приожении
-    if random_let.letters_control(user_word, user_letters, user_used_letters) and word.word_in_dict_control(user_word):
+    if user_word == "" :
+        message["text"]="You forgot enter your word"
+    elif user_location == False:
+        message["text"]="Location is wrong"
+    elif random_let.letters_control(user_word, user_letters, user_used_letters) and word.word_in_dict_control(user_word, user_lang):
         # random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
         # print(user_all_words, user_column_int, user_row_int, user_direct, user_word)
         if len(user_all_words)==0:
-            if  user_column_int == 8 and user_row_int == 8: # если в списке слов нет слов просто поомещаем слово в ту колонку и ряд который юзер ввел
+            if  user_column_int == 8 and user_row_int == 8: # если в списке слов нет слов, просто поомещаем слово в ту колонку и ряд который юзер ввел
                 random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
-                print("Pass")
+                message["text"]="Good choice"
                 user_all_words.append(user_word)
-                score = random_let.pointsCount(user_word)
-                l, used_letters = random_let.user_letters_update( user_word, user_letters)
+                score = random_let.pointsCount(user_word, message)
+                l, used_letters = random_let.user_letters_update( user_word, user_letters, user_lang)
                 us_let['text'] = l
                 u_l = list(used_letters)
-                #user_letters = str(new_letters)
-                print(l, " ", user_letters, " ", u_l)
                 user_all_words_var = StringVar(value=user_all_words)
                 user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
                 user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
-
                 all_score += score
                 for i in u_l:
                     if i != " ":
@@ -179,22 +223,21 @@ def save_data():
                 view_score["text"]=f"Your score: {all_score}"
             else:
                 print("wrong column or row number. Please begin from ***")
+                message["text"]="Wrong column or row number. Please begin from ***"
+
         else: # если в списке слов уже есть слова проверяем что буквы в пересекающемся слове совпадают
             # print(buttons[user_column_int-1][user_row_int-1]['text'])
-            if random_let.word_and_field_control(direct, user_column_int, user_row_int, buttons, user_word):
+            if random_let.word_and_field_control(direct, user_column_int, user_row_int, buttons, user_word, message):
                 random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
-                print("second")
+                message["text"]="It's great!!!"
                 user_all_words.append(user_word)
-                score = random_let.pointsCount(user_word)
-                l, used_letters = random_let.user_letters_update( user_word, user_letters)
+                score = random_let.pointsCount(user_word, message)
+                l, used_letters = random_let.user_letters_update( user_word, user_letters, user_lang)
                 us_let['text'] = l
                 u_l = list(used_letters)
-                #user_letters = str(new_letters)
-                print(l, " ", user_letters, " ", u_l)
                 user_all_words_var = StringVar(value=user_all_words)
                 user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
                 user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
-
                 all_score += score
                 for i in u_l:
                     if i != " ":
@@ -206,6 +249,7 @@ def save_data():
 
     else:
         print("Dont pass. Please enter your word")
+        message["text"]="Dont pass. Please enter your word"
 
 btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
 btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
@@ -218,16 +262,16 @@ footer['padding'] = (50, 1)
 
 minutes = StringVar()
 seconds = StringVar()
-minutes.set('00')
-seconds.set ('10')
+minutes.set('01')
+seconds.set ('00')
 def countdown():
     t = 10
     global minutes
     global seconds
     while t > -1:
         mins, secs = divmod(t, 60)
-        seconds.set(secs)
-        minutes.set(mins)
+        seconds.set('{:02d}'.format(secs))
+        minutes.set('{:02d}'.format(mins))
         # timer["text"] = f'Time: '
         # minutes = '{:02d}'.format(mins)
         # seconds = '{:02d}'.format(secs)
@@ -238,7 +282,7 @@ def countdown():
         if t == 0:
             seconds.set("00")
             minutes.set("00")
-            messagebox.showinfo("Time Countdown", "Game over")
+            messagebox.showinfo("Time Countdown", f"Game over. Your score: {all_score}")
         t -= 1
       
 timer = ttk.Label(footer, text=f'Time:', background="#856ff8")

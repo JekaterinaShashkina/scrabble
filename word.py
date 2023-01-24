@@ -1,7 +1,22 @@
+# en_dict = '/dictionaries/english_noun.txt'
+# ee_dict = '/dictionaries/estonian_nouns.txt'
+# ru_dict = '/dictionaries/russian_nouns.txt'
+
+
 # Проверка в словаре 
-def word_in_dict_control(word):
-    with open('./dictionaries/english_noun.txt', 'r') as en_dict: # открываем файл на чтение
-        words = en_dict.readlines()    # читаем файл построчно и делаем массив строк
+def word_in_dict_control(word, lang):
+    d = " "
+    print(lang)
+    if lang == "Estonian":
+        d = "./dictionaries/estonian_nouns.txt"
+    elif lang == "Russian":
+        d = "./dictionaries/russian_nouns.txt"
+    else:
+        d = "./dictionaries/english_nouns.txt"
+    print(d)
+
+    with open(d, 'r', encoding="utf-8") as your_dict: # открываем файл на чтение
+        words = your_dict.readlines()    # читаем файл построчно и делаем массив строк
     w = 0
     for line in words:
         if line.strip('\n') == word: # проверяем есть ли слово в словаре, удаляем из слов в словаре перенос строки
@@ -12,4 +27,4 @@ def word_in_dict_control(word):
         print(f"Sorry {word}")
         return False
 
-# word_in_dict_control("river")
+word_in_dict_control("way", "English")
