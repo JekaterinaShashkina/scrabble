@@ -44,7 +44,7 @@ def letters_add(lang):
     let = ' '.join(user_letters)
     
     return let
-print(letters_add("Russian"))
+# print(letters_add("Russian"))
 # добавляем буквы после использования для слова
 def user_letters_update(word, letters, lang):
     bag = bag_choice(lang)
@@ -109,7 +109,7 @@ def fun(x):
             return dct.get(key) # метод get ищет значение по ключу, если находит ключ возвращает значение
 
 # Суммируем очки за слово 
-def pointsCount(word, message):
+def pointsCount(word):
     global premium_spots
     # points = list(map(fun, word))
     # print(points)
@@ -129,7 +129,7 @@ def pointsCount(word, message):
             word_score *= 3
         elif spot[1] == "DWS":
             word_score *= 2
-    message["text"] = f'Grats your word is {word_score} points'
+    # message["text"] = f'Grats your word is {word_score} points'
     return word_score
             
 def row_column_check(column, row):
@@ -143,15 +143,16 @@ def row_column_check(column, row):
 # создание массива букв и еслть что то на том месте
 def control_buttons(direct, column, row, buttons, word):
     space_letters_list = list()
+    temp =  buttons[row - 1][column - 1]['text']
     for _ in word:
-        if buttons[column - 1][row - 1]['text'] == " " or buttons[column - 1][row - 1]['text'] == "TWS" or buttons[column - 1][row - 1]['text'] == "TLS" or buttons[column - 1][row - 1]['text'] == "DWS" or buttons[column - 1][row - 1]['text'] == "DLS" or buttons[column - 1][row - 1]['text'] == "...":
+        if buttons[row - 1][column - 1]['text'] == " " or buttons[row - 1][column - 1]['text'] == "" or buttons[row - 1][column - 1]['text'] == "TWS" or buttons[row - 1][column - 1]['text'] == "TLS" or buttons[row - 1][column - 1]['text'] == "DWS" or buttons[row - 1][column - 1]['text'] == "DLS" or buttons[row - 1][column - 1]['text'] == "...":
             print(buttons[row-1][column-1])
             space_letters_list.append("-")
         else:
             space_letters_list.append(buttons[row - 1][column - 1]['text'])
-        if direct == "Down":
+        if direct == "Right":
             column += 1
-        else:
+        elif direct == "Down":
             row += 1
     
     print("spl: ", space_letters_list)

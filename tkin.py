@@ -198,21 +198,21 @@ def save_data():
         message["text"]="You forgot enter your word"
     elif user_location == False:
         message["text"]="Location is wrong"
-    elif random_let.letters_control(user_word, user_letters, user_used_letters) and word.word_in_dict_control(user_word, user_lang):
+    elif random_let.letters_control(user_word, user_letters, user_used_letters): #and word.word_in_dict_control(user_word, user_lang):
         # random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
         # print(user_all_words, user_column_int, user_row_int, user_direct, user_word)
         if len(user_all_words)==0:
             if  user_column_int == 8 and user_row_int == 8: # если в списке слов нет слов, просто поомещаем слово в ту колонку и ряд который юзер ввел
                 random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
-                message["text"]="Good choice"
                 user_all_words.append(user_word)
-                score = random_let.pointsCount(user_word, message)
+                score = random_let.pointsCount(user_word)
                 l, used_letters = random_let.user_letters_update( user_word, user_letters, user_lang)
                 us_let['text'] = l
                 u_l = list(used_letters)
                 user_all_words_var = StringVar(value=user_all_words)
                 user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
                 user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
+                message["text"]=f"Good choice. Your word is {score} points"
                 all_score += score
                 for i in u_l:
                     if i != " ":
@@ -227,17 +227,17 @@ def save_data():
 
         else: # если в списке слов уже есть слова проверяем что буквы в пересекающемся слове совпадают
             # print(buttons[user_column_int-1][user_row_int-1]['text'])
-            if random_let.word_and_field_control(direct, user_column_int, user_row_int, buttons, user_word, message):
+            if random_let.word_and_field_control(user_direct, user_column_int, user_row_int, buttons, user_word, message):
                 random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
-                message["text"]="It's great!!!"
                 user_all_words.append(user_word)
-                score = random_let.pointsCount(user_word, message)
+                score = random_let.pointsCount(user_word)
                 l, used_letters = random_let.user_letters_update( user_word, user_letters, user_lang)
                 us_let['text'] = l
                 u_l = list(used_letters)
                 user_all_words_var = StringVar(value=user_all_words)
                 user_all_words_listbox = Listbox(frame, listvariable=user_all_words_var)
                 user_all_words_listbox.grid(column=2, row=1, rowspan=5, padx=6)
+                message["text"]=f"It's great!!! Your word is {score} points"
                 all_score += score
                 for i in u_l:
                     if i != " ":
@@ -245,6 +245,7 @@ def save_data():
                 print(f"used letters list {user_used_letters}")
                 print(f"your score {score}")
                 print(f"all score {all_score}")
+
                 view_score["text"]=f"Your score: {all_score}"
 
     else:
