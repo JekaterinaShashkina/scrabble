@@ -88,12 +88,12 @@ eng_btn.config(command=lambda button=eng_btn: lang_choice(button))
 eng_btn.grid(column=3, row=1, ipady=1, ipadx=1, sticky=E)
 # url_est = 
 img_est =PhotoImage(file="img/icon-est.png")
-est_btn = ttk.Button(frame, image=img_est, padding=0, text="Estonian")
+est_btn = ttk.Button(frame, image=img_est, padding=0, text="Estonian", cursor='man')
 est_btn.config(command=lambda button=est_btn: lang_choice(button))
 est_btn.grid(column=3, row=2, ipady=1, ipadx=1, sticky=E)
 # url_rus = 
 img_rus =PhotoImage(file="img/icon-rus.png")
-rus_btn = ttk.Button(frame, image=img_rus, padding=0, text="Russian")
+rus_btn = ttk.Button(frame, image=img_rus, padding=0, text="Russian", cursor='man')
 rus_btn.config(command=lambda button=rus_btn: lang_choice(button))
 rus_btn.grid(column=3, row=3, ipady=1, ipadx=1, sticky=E)
 
