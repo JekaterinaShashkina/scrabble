@@ -1,7 +1,8 @@
 import random
 import bags
-from functools import reduce
-from operator import add
+# from functools import reduce
+# from operator import add
+# import oknodubl
 
 def bag_choice(lang):
     if lang == "Estonian":
@@ -44,6 +45,8 @@ def letters_add(lang):
     let = ' '.join(user_letters)
     
     return let
+
+# let = letters_add(oknodubl.selected_language)
 # print(letters_add("Russian"))
 # добавляем буквы после использования для слова
 def user_letters_update(word, letters, lang):
@@ -86,16 +89,16 @@ def word_place(word, direct, row, column, buttons):
     if direct == "Down":
 
         for i in word:
-            if buttons[row-1][column-1]['text'] != " ":
-                premium_spots.append((i, buttons[row-1][column-1]['text']))
-            buttons[row-1][column-1]['text'] = i.upper()
+            if buttons[row][column]['text'] != " ":
+                premium_spots.append((i, buttons[row][column]['text']))
+            buttons[row][column]['text'] = i.upper()
             row += 1
             # print(i)
     if direct == "Right":
             for i in word:
-                if buttons[row-1][column-1]['text'] != " ":
-                    premium_spots.append((i, buttons[row-1][column-1]['text']))
-                buttons[row-1][column-1]['text'] = i.upper()
+                if buttons[row][column]['text'] != " ":
+                    premium_spots.append((i, buttons[row][column]['text']))
+                buttons[row][column]['text'] = i.upper()
                 column += 1
                 # print(i)
 
@@ -111,11 +114,7 @@ def fun(x):
 # Суммируем очки за слово 
 def pointsCount(word):
     global premium_spots
-    # points = list(map(fun, word))
-    # print(points)
-    # return points
     word_score = 0
-    # p = 0
     for letter in word:
         for spot in premium_spots:
             if letter == spot[0]:
@@ -129,12 +128,11 @@ def pointsCount(word):
             word_score *= 3
         elif spot[1] == "DWS":
             word_score *= 2
-    # message["text"] = f'Grats your word is {word_score} points'
     return word_score
             
 def row_column_check(column, row):
     location = []
-    if (column == "" or row == "") or (column not in [str(x) for x in range(15)]) or (row not in [str(x) for x in range(15)]):
+    if (column == "" or row == "") or (column not in [str(x) for x in range(16)]) or (row not in [str(x) for x in range(16)]):
         return False
     else:
         location = [int(row), int(column)]
@@ -143,13 +141,12 @@ def row_column_check(column, row):
 # создание массива букв и еслть что то на том месте
 def control_buttons(direct, column, row, buttons, word):
     space_letters_list = list()
-    temp =  buttons[row - 1][column - 1]['text']
     for _ in word:
-        if buttons[row - 1][column - 1]['text'] == " " or buttons[row - 1][column - 1]['text'] == "" or buttons[row - 1][column - 1]['text'] == "TWS" or buttons[row - 1][column - 1]['text'] == "TLS" or buttons[row - 1][column - 1]['text'] == "DWS" or buttons[row - 1][column - 1]['text'] == "DLS" or buttons[row - 1][column - 1]['text'] == "...":
-            print(buttons[row-1][column-1])
+        if buttons[row][column]['text'] == " " or buttons[row][column]['text'] == "" or buttons[row][column]['text'] == "TWS" or buttons[row][column]['text'] == "TLS" or buttons[row][column]['text'] == "DWS" or buttons[row][column]['text'] == "DLS" or buttons[row][column]['text'] == "...":
+            print(buttons[row][column])
             space_letters_list.append("-")
         else:
-            space_letters_list.append(buttons[row - 1][column - 1]['text'])
+            space_letters_list.append(buttons[row][column]['text'])
         if direct == "Right":
             column += 1
         elif direct == "Down":
