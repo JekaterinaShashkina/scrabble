@@ -3,16 +3,14 @@ from tkinter import ttk
 from tkinter import messagebox
 import os
 import sys
+
 def on_closing():
     if messagebox.askokcancel("Выход из приложения", "Хотите выйти из игры?" ):
         root.destroy()
 
-
-
 root = Tk()
 root.protocol("WM_DELETE_WINDOW", on_closing)
 root.title('Scrabble')
-# root.geometry('850x850')
 root.resizable(width=False, height=False)
 
 width = 850

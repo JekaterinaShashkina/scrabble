@@ -4,12 +4,10 @@ from tkinter import messagebox
 import random_let
 import word
 import time
-# import main
 
-
-def finish():
-    rootWindow.destroy()
-    print("Закрытие окна")
+def on_closing():
+    if messagebox.askokcancel("Выход из приложения", "Do you want to exit?" ):
+        rootWindow.destroy()
 
 rootWindow = Tk() # создаем новый обьект - окно
 ttk.Style().configure(".",  font="helvetica 9", foreground="#004D40")  
@@ -21,17 +19,16 @@ heigh = 800
 screenwidth = rootWindow.winfo_screenwidth()# что бы окно по центру всплывало
 screenheight = rootWindow.winfo_screenheight()
 rootWindow.geometry('%dx%d+%d+%d'%(width, heigh, (screenwidth-width)/2, 0))
-# rootWindow.attributes("-alpha", 0.2) # установка прозрачности
-# rootWindow.attributes("-toolwindow", True) # отключение верхней панели окна
 
 # rootWindow.resizable(False, False) # Неизменяемые размеры окна
 gameName = Label(text="SCRABBLE", font="Helvetica 16 italic", foreground="#A53EFB") # создаем текстовую метку
 gameName.pack() # размещаем метку в окне
-# rootWindow.protocol("WM_DELETE_WINDOW", finish) # хрень какая то перехватываем закрытие окна 
+rootWindow.protocol("WM_DELETE_WINDOW", on_closing) # перехватываем закрытие окна 
 
 us_let = ttk.Label()
 us_let["text"] = ""
 us_let.pack()
+
 # рамка с вводом слова кнопкой сейва и листом со словами
 frame = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700) # Создаем новое окно в корневом окне
 frame['padding'] = (80, 10)
@@ -106,7 +103,6 @@ def lang_choice(clicked_button):
     est_btn['state']= 'disabled'
     rus_btn['state']= 'disabled'
 
-
 # устанавливаем рамку
 frame.pack(anchor=N, padx=5, pady=5) 
 
@@ -148,7 +144,7 @@ buttons =[]
 for i in range(ROW):
     temp = []
     for j in range(COLUMNS):
-        btn = ttk.Button(game_field, width=5, padding=2, style="SL.TButton") #, style="SL.TLabel")
+        btn = ttk.Button(game_field, width=5, padding=2, style="SL.TButton")
         temp.append(btn)
     buttons.append(temp)
 for i in COLUMN_NAME:
@@ -170,7 +166,6 @@ for coord in DOUBLE_LETTER_SCORE:
 buttons[8][8]['text'] = '***'
 buttons[8][8]['style'] = 'POINT.TLabel'
 buttons[0][0]['text'] = ''
-
 
 for i in range(ROW):
     for j in range(COLUMNS):
@@ -201,9 +196,7 @@ def save_data():
         message["text"]="You forgot enter your word"
     elif user_location == False:
         message["text"]="Location is wrong"
-    elif random_let.letters_control(user_word, user_letters, user_used_letters): #and word.word_in_dict_control(user_word, user_lang):
-        # random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
-        # print(user_all_words, user_column_int, user_row_int, user_direct, user_word)
+    elif random_let.letters_control(user_word, user_letters, user_used_letters) and word.word_in_dict_control(user_word, user_lang):
         if len(user_all_words)==0:
             if  user_column_int == 8 and user_row_int == 8: # если в списке слов нет слов, просто поомещаем слово в ту колонку и ряд который юзер ввел
                 random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
@@ -229,9 +222,7 @@ def save_data():
             else:
                 print("wrong column or row number. Please begin from ***")
                 message["text"]="Wrong column or row number. Please begin from ***"
-
         else: # если в списке слов уже есть слова проверяем что буквы в пересекающемся слове совпадают
-            # print(buttons[user_column_int-1][user_row_int-1]['text'])
             if random_let.word_and_field_control(user_direct, user_column_int, user_row_int, buttons, user_word, message):
                 random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
                 user_all_words.append(user_word)
@@ -259,9 +250,6 @@ def save_data():
 
 btn_save = ttk.Button(frame, text="Save", command=save_data, padding=[20, 5]) # кнопка сохранить слово
 btn_save.grid(column=0, row=5, columnspan=2, padx=25, pady=5)
-
-
-# print(f"letters {l}")
 
 footer = ttk.Frame(borderwidth=1, relief=SOLID, height=100, width=700)
 footer['padding'] = (50, 1)
@@ -308,7 +296,6 @@ view_score.grid(column=4, row=0)
 # btn_new_game.grid(column=5, row=0, sticky=W,ipadx=10, ipady=15) # Параметры ipadx и ipady позволяют указать отступы содержимого виджета от границ виджета
 # btn_new_game["text"] ="New Game" # устанавливаем параметр text на кнопку новая игра
 # btn_new_game['padding'] = (10, 0, 10, 0)
-
 
 footer.pack(anchor=S, padx=5, pady=5) # выводим рамку на экран
 rootWindow.mainloop()

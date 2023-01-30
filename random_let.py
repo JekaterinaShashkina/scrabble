@@ -2,9 +2,6 @@ import random
 import bags
 from tkinter import *
 from tkinter import ttk
-# from functools import reduce
-# from operator import add
-# import oknodubl
 
 def bag_choice(lang):
     if lang == "Estonian":
@@ -14,8 +11,6 @@ def bag_choice(lang):
     else:
         bag = bags.en_bag
     return bag
-
-# random.shuffle(bag) # перемешиваем буквы
 
 user_letters = []
 en_vowels = "euioa"
@@ -48,8 +43,6 @@ def letters_add(lang):
     
     return let
 
-# let = letters_add(oknodubl.selected_language)
-# print(letters_add("Russian"))
 # добавляем буквы после использования для слова
 def user_letters_update(word, letters, lang):
     bag = bag_choice(lang)
@@ -98,7 +91,6 @@ def word_place(word, direct, row, column, buttons):
             buttons[row][column]['text'] = i.upper()
             buttons[row][column]['style'] = "Bold.TButton"
             row += 1
-            # print(i)
     if direct == "Right":
             for i in word:
                 if buttons[row][column]['text'] != " ":
@@ -107,7 +99,6 @@ def word_place(word, direct, row, column, buttons):
                 buttons[row][column]['style'] = "Bold.TButton"
 
                 column += 1
-                # print(i)
 
 def fun(x):
     dct = {

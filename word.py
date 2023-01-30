@@ -2,7 +2,6 @@
 # ee_dict = '/dictionaries/estonian_nouns.txt'
 # ru_dict = '/dictionaries/russian_nouns.txt'
 
-
 # Проверка в словаре 
 def word_in_dict_control(word, lang):
     d = " "
