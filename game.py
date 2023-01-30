@@ -40,12 +40,6 @@ frame['padding'] = (80, 10)
 user_word_label = ttk.Label(frame, justify=LEFT, text="Your word ")
 user_word_label.grid(column=0, row=0, sticky=W)  
 
-def is_valid(newval):
-    if newval == "" or newval not in [str(x) for x in range(15)]:
-        return False
-    else:
-        return True
-check = (frame.register(is_valid), "%P")
 # список слов польззователя
 user_words_list = ttk.Label(frame, text=f"List of your words: ")
 user_words_list.grid(column=2, row=0)
@@ -186,6 +180,7 @@ for i in range(ROW):
 # функция для обработки внесенных данных 
 def save_data(): 
     user_word = entered_text.get() # получаем введенный текст
+    entered_text.delete(0, END)
     user_column = column_entry.get()
     user_row = row_entry.get()
     user_direct = selected_direct.get()
@@ -228,6 +223,9 @@ def save_data():
                 print(f"your score {score}")
                 print(f"all score {all_score}")
                 view_score["text"]=f"Your score: {all_score}"
+                entered_text.delete(0, END)
+                column_entry.delete(0, END)
+                row_entry.delete(0, END)
             else:
                 print("wrong column or row number. Please begin from ***")
                 message["text"]="Wrong column or row number. Please begin from ***"
@@ -249,12 +247,12 @@ def save_data():
                 for i in u_l:
                     if i != " ":
                         user_used_letters.append(i)
-                print(f"used letters list {user_used_letters}")
                 print(f"your score {score}")
                 print(f"all score {all_score}")
-
                 view_score["text"]=f"Your score: {all_score}"
-
+                entered_text.delete(0, END)
+                column_entry.delete(0, END)
+                row_entry.delete(0, END)
     else:
         print("Dont pass. Please enter your word")
         message["text"]="Dont pass. Please enter your word"

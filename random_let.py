@@ -81,7 +81,7 @@ def letters_control(word, letters, user_let):
         print('Отлично')
         return True
     else:
-        print('не так')
+        print('неправильные буквы')
         return False
 
 # размещение слова на поле и сохранение бонусов в отодельный массив
