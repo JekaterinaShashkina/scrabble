@@ -15,7 +15,12 @@ rootWindow = Tk() # создаем новый обьект - окно
 ttk.Style().configure(".",  font="helvetica 9", foreground="#004D40")  
 rootWindow.title("SCRABBLE for everyone!!!") # устанавливаем заголовок окна
 rootWindow.iconbitmap(default="img/scrabble.ico")
-rootWindow.geometry("850x800+400+0") # устанавливаем размеры окна
+#  rootWindow.geometry("850x800+400+0") # устанавливаем размеры окна
+width = 850
+heigh = 800
+screenwidth = rootWindow.winfo_screenwidth()# что бы окно по центру всплывало
+screenheight = rootWindow.winfo_screenheight()
+rootWindow.geometry('%dx%d+%d+%d'%(width, heigh, (screenwidth-width)/2, 0))
 # rootWindow.attributes("-alpha", 0.2) # установка прозрачности
 # rootWindow.attributes("-toolwindow", True) # отключение верхней панели окна
 
@@ -201,7 +206,7 @@ def save_data():
         message["text"]="You forgot enter your word"
     elif user_location == False:
         message["text"]="Location is wrong"
-    elif random_let.letters_control(user_word, user_letters, user_used_letters): #and word.word_in_dict_control(user_word, user_lang):
+    elif random_let.letters_control(user_word, user_letters, user_used_letters) and word.word_in_dict_control(user_word, user_lang):
         # random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
         # print(user_all_words, user_column_int, user_row_int, user_direct, user_word)
         if len(user_all_words)==0:
