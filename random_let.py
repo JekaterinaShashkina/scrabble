@@ -1,5 +1,7 @@
 import random
 import bags
+from tkinter import *
+from tkinter import ttk
 # from functools import reduce
 # from operator import add
 # import oknodubl
@@ -85,6 +87,8 @@ def letters_control(word, letters, user_let):
 # размещение слова на поле и сохранение бонусов в отодельный массив
 premium_spots = []
 def word_place(word, direct, row, column, buttons):
+    boldStyle = ttk.Style ()
+    boldStyle.configure ("Bold.TButton", width=2, font='Helvetica 10 bold')
     global premium_spots
     if direct == "Down":
 
@@ -92,6 +96,7 @@ def word_place(word, direct, row, column, buttons):
             if buttons[row][column]['text'] != " ":
                 premium_spots.append((i, buttons[row][column]['text']))
             buttons[row][column]['text'] = i.upper()
+            buttons[row][column]['style'] = "Bold.TButton"
             row += 1
             # print(i)
     if direct == "Right":
@@ -99,6 +104,8 @@ def word_place(word, direct, row, column, buttons):
                 if buttons[row][column]['text'] != " ":
                     premium_spots.append((i, buttons[row][column]['text']))
                 buttons[row][column]['text'] = i.upper()
+                buttons[row][column]['style'] = "Bold.TButton"
+
                 column += 1
                 # print(i)
 
@@ -143,7 +150,6 @@ def control_buttons(direct, column, row, buttons, word):
     space_letters_list = list()
     for _ in word:
         if buttons[row][column]['text'] == " " or buttons[row][column]['text'] == "" or buttons[row][column]['text'] == "TWS" or buttons[row][column]['text'] == "TLS" or buttons[row][column]['text'] == "DWS" or buttons[row][column]['text'] == "DLS" or buttons[row][column]['text'] == "...":
-            print(buttons[row][column])
             space_letters_list.append("-")
         else:
             space_letters_list.append(buttons[row][column]['text'])
@@ -152,7 +158,6 @@ def control_buttons(direct, column, row, buttons, word):
         elif direct == "Down":
             row += 1
     
-    print("spl: ", space_letters_list)
     return space_letters_list
 # контроль соответствия букв и массива поля
 def word_and_field_control(direct, column, row, buttons, word, message):

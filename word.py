@@ -6,14 +6,12 @@
 # Проверка в словаре 
 def word_in_dict_control(word, lang):
     d = " "
-    print(lang)
     if lang == "Estonian":
         d = "./dictionaries/estonian_nouns.txt"
     elif lang == "Russian":
         d = "./dictionaries/russian_nouns.txt"
     else:
         d = "./dictionaries/english_nouns.txt"
-    print(d)
 
     with open(d, 'r', encoding="utf-8") as your_dict: # открываем файл на чтение
         words = your_dict.readlines()    # читаем файл построчно и делаем массив строк
@@ -27,4 +25,3 @@ def word_in_dict_control(word, lang):
         print(f"Sorry {word}")
         return False
 
-word_in_dict_control("way", "English")

@@ -206,7 +206,7 @@ def save_data():
         message["text"]="You forgot enter your word"
     elif user_location == False:
         message["text"]="Location is wrong"
-    elif random_let.letters_control(user_word, user_letters, user_used_letters) and word.word_in_dict_control(user_word, user_lang):
+    elif random_let.letters_control(user_word, user_letters, user_used_letters): #and word.word_in_dict_control(user_word, user_lang):
         # random_let.word_place(user_word, user_direct, user_row_int, user_column_int, buttons)
         # print(user_all_words, user_column_int, user_row_int, user_direct, user_word)
         if len(user_all_words)==0:
@@ -225,7 +225,6 @@ def save_data():
                 for i in u_l:
                     if i != " ":
                         user_used_letters.append(i)
-                print(f"used letters list {user_used_letters}")
                 print(f"your score {score}")
                 print(f"all score {all_score}")
                 view_score["text"]=f"Your score: {all_score}"
